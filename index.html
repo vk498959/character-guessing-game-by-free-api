@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Character generator</title>
+</head>
+<body>
+<center>
+    <h1>Guess your character Just for fun.</h1>
+    <div>
+        Enter your name:- <input type="text" placeholder="name" id="name">
+                        <button id="btn">Submit</button>
+    </div>
+    <div id="show">
+
+    </div>
+</center>
+    <h1 id="show"></h1>
+    <script>
+        //getting name after clicked event on button
+        document.getElementById("btn").addEventListener("click",()=>{
+            var name=document.getElementById("name").value;
+            fapi(name);
+
+
+        })
+        //for dom manupulation
+        var show=document.getElementById("show");
+        //fetching the all neccessary data from api
+        async function fapi(name){
+             let getw= await fetch("https://api.genderize.io/?name="+name);
+             let geta= await fetch("https://api.agify.io/?name="+name);
+             let getc= await fetch("https://api.nationalize.io?name="+name);
+             let getd= await getc.json();
+             let getb=await geta.json();
+             let getr= await getw.json();
+             var country=" ";
+             for(var i=0;i<getd.country.length;i++){
+                  country+=await getd.country[i].country_id+", ";
+             }
+             //showing data in div on show id
+             show.innerHTML="<h3>Your name is "+await getr.name+"</h3>"
+                           +"<li>Your gender is "+await getr.gender+"</li>"
+                           +"<li>Your age is "+await getb.age+"</li>"
+                           +"<li>Your country id is "+ country +"</li>"     
+                           +"<li>The probability of having this in your charcter is "+await getr.probability*100+"% </li>";
+        }
+    </script>
+</body>
+</html>
